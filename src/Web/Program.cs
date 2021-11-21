@@ -15,11 +15,11 @@ namespace SnackAttack.Web
 
                 try
                 {
-                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    var applicationDbContext = services.GetRequiredService<ApplicationDbContext>();
 
-                    if (context.Database.IsSqlServer())
+                    if (applicationDbContext.Database.IsNpgsql())
                     {
-                        context.Database.Migrate();
+                        applicationDbContext.Database.Migrate();
                     }
 
                     //await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
