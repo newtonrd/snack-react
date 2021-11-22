@@ -23,7 +23,7 @@ namespace SnackAttack.Web
                     }
 
                     //await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
-                    //await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+                    await ApplicationDbContextSeed.SeedSampleDataAsync(applicationDbContext);
                 }
                 catch (Exception ex)
                 {

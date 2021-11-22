@@ -22,8 +22,6 @@ namespace SnackAttack.Web
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddSingleton<ICurrentUserService, CurrentUserService>();
-
             services.AddRazorPages();
         }
 

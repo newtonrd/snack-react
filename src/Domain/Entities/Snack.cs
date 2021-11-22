@@ -6,5 +6,7 @@ namespace SnackAttack.Domain.Entities
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+
+        public IList<Review> Reviews { get; private set; } = new List<Review>();
     }
 }
