@@ -1,5 +1,7 @@
 using SnackAttack.Application;
+using SnackAttack.Application.Common.Interfaces;
 using SnackAttack.Infrastructure;
+using SnackAttack.Web.Services;
 
 namespace SnackAttack.Web
 {
@@ -17,6 +19,12 @@ namespace SnackAttack.Web
         {
             services.AddApplication();
             services.AddInfrastructure(Configuration);
+
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
+            services.AddSingleton<ICurrentUserService, CurrentUserService>();
+
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,6 +41,30 @@ namespace SnackAttack.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseRouting();
+
+            // app.UseAuthentication();
+            // app.UseIdentityServer();
+            // app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    //spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer(Configuration["SpaBaseUrl"] ?? "http://localhost:4200");
+                }
+            });
         }
     }
 }
