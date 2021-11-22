@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SnackAttack.Application.Common.Interfaces;
 using SnackAttack.Infrastructure.Identity;
 using SnackAttack.Infrastructure.Persistence;
+using SnackAttack.Infrastructure.Services;
 
 namespace SnackAttack.Infrastructure
 {
@@ -14,27 +15,15 @@ namespace SnackAttack.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                        options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+                        options.UseNpgsql(
+                            configuration.GetConnectionString("DefaultConnection"),
+                            options => options.UseNodaTime()
+                        )
+            );
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-            services
-                .AddDefaultIdentity<ApplicationUser>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services
-                .AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
-            services
-                .AddAuthentication()
-                .AddIdentityServerJwt();
-
-            services.AddTransient<IIdentityService, IdentityService>();
-
-            services.AddAuthorization(options =>
-                options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));
+            services.AddTransient<IDateTimeService, DateTimeService>();
 
             return services;
         }

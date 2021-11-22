@@ -1,28 +1,26 @@
 using System.Reflection;
 using Duende.IdentityServer.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SnackAttack.Application.Common.Interfaces;
 using SnackAttack.Domain.Common;
 using SnackAttack.Domain.Entities;
-using SnackAttack.Infrastructure.Identity;
 
 namespace SnackAttack.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        private readonly ICurrentUserService _currentUserService;
+        private readonly IDateTimeService _dateTimeService;
 
         public ApplicationDbContext(
               DbContextOptions<ApplicationDbContext> options,
-              IOptions<OperationalStoreOptions> operationalStoreOptions,
-              ICurrentUserService currentUserService) : base(options, operationalStoreOptions)
+              IDateTimeService dateTimeService) : base(options)
         {
-            _currentUserService = currentUserService;
+            _dateTimeService = dateTimeService;
         }
 
         public DbSet<Snack> Snacks => Set<Snack>();
+        public DbSet<Review> Reviews => Set<Review>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -31,13 +29,13 @@ namespace SnackAttack.Infrastructure.Persistence
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = _currentUserService.UserId;
-                        entry.Entity.Created = DateTime.Now;
+                        entry.Entity.CreatedBy = "system";
+                        entry.Entity.Created = _dateTimeService.NowInUtc;
                         break;
 
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedBy = _currentUserService.UserId;
-                        entry.Entity.LastModified = DateTime.Now;
+                        entry.Entity.LastModifiedBy = "system";
+                        entry.Entity.LastModified = _dateTimeService.NowInUtc;
                         break;
                 }
             }

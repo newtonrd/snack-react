@@ -1,6 +1,7 @@
 using SnackAttack.Domain.Entities;
 using SnackAttack.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using SnackAttack.Domain.Enums;
 
 namespace SnackAttack.Infrastructure.Persistence
 {
@@ -32,7 +33,11 @@ namespace SnackAttack.Infrastructure.Persistence
             {
                 context.Snacks.Add(new Snack
                 {
-                    Name = "Oreo"
+                    Name = "Oreo",
+                    Reviews = 
+                    {
+                        new Review { Rating = Rating.Average },
+                    }
                 });
 
                 await context.SaveChangesAsync();
