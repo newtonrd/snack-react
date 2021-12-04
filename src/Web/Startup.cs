@@ -1,7 +1,6 @@
+using System.Text.Json.Serialization;
 using SnackAttack.Application;
-using SnackAttack.Application.Common.Interfaces;
 using SnackAttack.Infrastructure;
-using SnackAttack.Web.Services;
 
 namespace SnackAttack.Web
 {
@@ -23,6 +22,8 @@ namespace SnackAttack.Web
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddRazorPages();
+            services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
