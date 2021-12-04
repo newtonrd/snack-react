@@ -10,5 +10,6 @@ namespace SnackAttack.Domain.Common
 
         public Instant? LastModified { get; set; }
         public string? LastModifiedBy { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }

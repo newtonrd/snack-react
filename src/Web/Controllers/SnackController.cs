@@ -1,18 +1,23 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SnackAttack.Application.Common.Interfaces;
 using SnackAttack.Domain.Entities;
 
 namespace SnackAttack.Web.Controllers
 {
     public class SnackController : ApiControllerBase
     {
-        [HttpGet]
-        public Snack GetSnack()
+        private ISnackService _snackService;
+        public SnackController(ISnackService snackService)
         {
-            return new Snack
-            {
-                Name = "Oreos"
-            };
+            _snackService = snackService;
+        }
+
+        [HttpGet]
+        public async Task<List<Snack>> GetSnack()
+        {
+            var snacks = await _snackService.GetAllSnacks();
+
+            return snacks;
         }
     }
 }

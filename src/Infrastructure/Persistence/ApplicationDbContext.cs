@@ -21,6 +21,7 @@ namespace SnackAttack.Infrastructure.Persistence
 
         public DbSet<Snack> Snacks => Set<Snack>();
         public DbSet<Review> Reviews => Set<Review>();
+        public DbSet<Company> Companies => Set<Company>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
